@@ -1,6 +1,6 @@
-let count = 0;
-const divCount = document.getElementById('cntrDiv');
-const toDos = [{
+// ----- Model -----
+
+let toDos = [{
     id: '001',
     title: 'Work',
     todate: '2021-10-04'
@@ -30,26 +30,34 @@ toDos.push({id: '004',title: 'Eat', todate: '2021-11-22'});
 
 addToDos();
 
-function plusCnt() {            
-    const id = new Date().getTime();
-    const taskTitle = document.getElementById('toDo-title').value;
-    const dueDate = document.getElementById('date-pick').value;
-    
+// Create ToDO
+
+function createToDo(taskTitle, dueDate) {            
+    const id = '' + new Date().getTime();
+
     toDos.push({
         id: id,
         title: taskTitle,
         todate: dueDate
     });
-
-    addToDos();
 };
 
-function delToDo(e) {
-    const delBttnId = e.target.id;
-    console.log(delBttnId);    
-};
+// Remove ToDo
+
+function remToDo(delBttnId) {
+    toDos = toDos.filter(function (toDo) {
+        if(toDo.id === delBttnId) {
+            return false;
+        } else {
+            return true;
+        }
+    });
+}
+
+// ----- View -----
 
 function addToDos() {
+    // Reset List
     document.getElementById('txt1-div').innerHTML = '';
     
     toDos.forEach(toDoTask => {
@@ -66,3 +74,24 @@ function addToDos() {
         document.getElementById('txt1-div').appendChild(elem1);
     })
 };
+
+// ----- Controller -----
+
+function plusToDo() {            
+    const taskTitle = document.getElementById('toDo-title').value;
+    const dueDate = document.getElementById('date-pick').value;
+    
+    createToDo(taskTitle, dueDate);
+
+    addToDos();
+};
+
+function delToDo(e) {
+    const delBttn = e.target;
+    const delBttnId = delBttn.id;
+
+    remToDo(delBttnId);
+    addToDos();
+};
+
+addToDos();
