@@ -1,38 +1,35 @@
+
 // ----- Model -----
 
-let toDos = [{
-    id: '001',
-    title: 'Work',
-    todate: '2021-10-04'
-}, {
-    id: '002',
-    title: 'Study',
-    todate: '2021-10-04'
-}, {
-    id: '003',
-    title:'Rest',
-    todate: '2021-10-04'
-}];
+// If localStorage has a toDos array, use it
+// Otherwise use default array.
+let toDos;
 
-/*
-updateDisplay();
-function updateDisplay() {
-    divCount.innerHTML = count;
+// Retrieve localStorage
+const savedToDos = JSON.parse(localStorage.getItem('toDos'));
+
+// Check if it's an array
+if(Array.isArray(savedToDos)) {
+    toDos = savedToDos;
+} else {
+    toDos = [{
+        id: '001',
+        title: 'Work',
+        todate: '2021-10-04'
+    }, {
+        id: '002',
+        title: 'Study',
+        todate: '2021-10-04'
+    }, {
+        id: '003',
+        title:'Rest',
+        todate: '2021-10-04'
+    }];
 }
-
-function minusCnt() {     
-    count--;
-    updateDisplay();
-};
-*/
-
-toDos.push({id: '004',title: 'Eat', todate: '2021-11-22'});
-
-addToDos();
 
 // Create ToDO
 
-function createToDo(taskTitle, dueDate) {            
+const createToDo = (taskTitle, dueDate) => {            
     const id = '' + new Date().getTime();
 
     toDos.push({
@@ -40,23 +37,36 @@ function createToDo(taskTitle, dueDate) {
         title: taskTitle,
         todate: dueDate
     });
-};
+
+    savToDos();
+}
 
 // Remove ToDo
 
-function remToDo(delBttnId) {
+const remToDo = delBttnId => {
     toDos = toDos.filter(function (toDo) {
+        // If id of toDos matches delBttnID, return false
+        // For everything else, return true
         if(toDo.id === delBttnId) {
             return false;
         } else {
             return true;
         }
     });
+
+    savToDos();
 }
+
+// Save ToDos
+
+const savToDos = () => {
+    localStorage.setItem('toDos', JSON.stringify(toDos));
+}
+
 
 // ----- View -----
 
-function addToDos() {
+const addToDos = () => {
     // Reset List
     document.getElementById('txt1-div').innerHTML = '';
     
@@ -73,25 +83,25 @@ function addToDos() {
 
         document.getElementById('txt1-div').appendChild(elem1);
     })
-};
+}
+
 
 // ----- Controller -----
 
-function plusToDo() {            
+const plusToDo = () => {            
     const taskTitle = document.getElementById('toDo-title').value;
     const dueDate = document.getElementById('date-pick').value;
     
     createToDo(taskTitle, dueDate);
-
     addToDos();
-};
+}
 
-function delToDo(e) {
+const delToDo = e => {
     const delBttn = e.target;
     const delBttnId = delBttn.id;
 
     remToDo(delBttnId);
     addToDos();
-};
+}
 
 addToDos();
